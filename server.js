@@ -2,44 +2,18 @@
 //Test:  http://localhost:9000/
 
 //Modules
+const utils = require('./utils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
 
 // LOAD LOCAL IP
-local_addresses = []
-const networkInterfaces = os.networkInterfaces()["Ethernet"];
 
-for (let i = 0 ; i < networkInterfaces.length ;i++) {
-    if (!networkInterfaces[i].internal){local_addresses.push(networkInterfaces[i].address)}
-}
-
-console.log(local_addresses)
-
+const IP = "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
+const FRONT_PATH = "front/"
+const PORT = 9000
+const PASWORD = ""  //DONT FORGET TO ADD A PASSWORD
 /////////////////////////////////////////////////////  BASIC STATIC HTML 
-function print_info_req(req) {
-
-  const myURL = new URL(req.url, 'http://' + req.headers['host']);
-
-  if (false){
-    console.log("");
-    console.log("Mensaje de solicitud");
-    console.log("====================");
-    console.log("Método: " + req.method);
-    console.log("Recurso: " + req.url);
-    console.log("Version: " + req.httpVersion)
-    console.log("Cabeceras: ");
-
-    for (hname in req.headers)
-      console.log(`  * ${hname}: ${req.headers[hname]}`);
-
-    
-    console.log("URL completa: " + myURL.href);
-    console.log("  Ruta: " + myURL.pathname);
-  }
-  return myURL
-}
-
 
 function OK(res,data){
 
@@ -64,13 +38,10 @@ function NOT_OK(res){
 }
 
 
-const PUERTO = 9000;
-
-const FRONT_PATH = "front/"
 
 const server = http.createServer((req, res) => {
     
-  url = print_info_req(req)
+  url = utils.print_req(req)
 
   if (req.method == "GET" ){
 
@@ -82,8 +53,8 @@ const server = http.createServer((req, res) => {
 
 });
 
-server.listen(PUERTO);
-
+server.listen(PORT,IP);
+console.log("SERVER CONECTED IN: " + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////  DINAMIC HTML 
 

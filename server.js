@@ -54,7 +54,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT,IP);
-console.log("SERVER CONECTED IN: " + String(IP) + "/" + String(PORT) )
+console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////  DINAMIC HTML 
 

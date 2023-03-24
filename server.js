@@ -9,7 +9,7 @@ const os = require('os');
 
 // LOAD LOCAL IP
 
-const IP = "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
+const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
 const FRONT_PATH = "front/"
 const PORT = 9000
 const PASWORD = ""  //DONT FORGET TO ADD A PASSWORD
@@ -54,6 +54,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT,IP);
+//console.log(server)
 console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////  DINAMIC HTML 

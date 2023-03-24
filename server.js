@@ -7,6 +7,7 @@ const fs = require('fs');
 const http = require('http');
 const os = require('os');
 
+
 // LOAD LOCAL IP
 
 const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
@@ -37,15 +38,20 @@ function NOT_OK(res){
   
 }
 
-
+let {publicKey,privateKey} = utils.keyGenerator()
+console.log(publicKey)
 
 const server = http.createServer((req, res) => {
-    
+
   url = utils.print_req(req)
 
   if (req.method == "GET" ){
 
     if (url.pathname == '/'){ fs.readFile(FRONT_PATH + 'index.html', (err, data) => { if(!err){ OK(res,data) }else{NOT_OK(res)}});
+
+    }else if (url.pathname == '/pk'){ 
+      
+      OK(res, String(publicKey))
 
     }else{fs.readFile(FRONT_PATH + url.pathname.slice(1,), (err, data) => { if(!err){OK(res,data)}else{NOT_OK(res)}}); }
 
@@ -59,8 +65,4 @@ console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////  DINAMIC HTML 
 
-function manageMain(data, DATABASE){
-  
-  return data
-}
 

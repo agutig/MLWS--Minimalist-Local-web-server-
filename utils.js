@@ -1,8 +1,10 @@
+const crypto = require('crypto');
+
 function print_req(req) {
 
     const myURL = new URL(req.url, 'http://' + req.headers['host']);
   
-    if (true){
+    if (false){
       console.log("");
       console.log("Mensaje de solicitud");
       console.log("====================");
@@ -21,8 +23,25 @@ function print_req(req) {
     return myURL
   }
 
+function keyGenerator(){
+  let { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 4096, // Tamaño de la clave en bits
+    publicKeyEncoding: {
+        type: 'pkcs1', // Formato de la clave pública
+        format: 'pem' // Formato de codificación
+    },
+    privateKeyEncoding: {
+        type: 'pkcs1', // Formato de la clave privada
+        format: 'pem' // Formato de codificación
+    }
+  });
+  
+  return {publicKey , privateKey };
+  
+}
+  
 
 
 module.exports = {
-    print_req,
+    print_req,keyGenerator
   }

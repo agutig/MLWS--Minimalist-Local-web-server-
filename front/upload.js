@@ -4,25 +4,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let sendButton = document.getElementById('buttonId');
     let value = inputElement.value;
 
-    console.log(sendButton)
-    sendButton.onclick = function(){
-        console.log("click")
-        fetch('access', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-            key1: value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    }
+    //Ask public Key
+    const m = new XMLHttpRequest();
+    m.open("GET", "/pk", false);
+    m.send();
+    m.onreadystatechange = () => {
+        if (m.readyState==4) {
+          if (m.status == 200) {
+            console.log(m.responseText)
+           }
+        }
+      }
 
 });

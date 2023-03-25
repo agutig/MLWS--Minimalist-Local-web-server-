@@ -2,27 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-  function encrypt(input, publicKeyPem) {
-    // Parsear la clave pública
-    const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
-    // Convertir el mensaje a bytes
-    const message = forge.util.encodeUtf8(String(input));
-
-    // Cifrar el mensaje con RSA-OAEP
-    const encrypted = publicKey.encrypt(message, 'RSA-OAEP', {
-      md: forge.md.sha256.create(),
-      mgf1: {
-        md: forge.md.sha256.create(),
-      },
-    });
-
-    // Convertir el mensaje cifrado a base64
-    const encryptedBase64 = forge.util.encode64(encrypted);
-  
-    return encryptedBase64;
-  }
-
-
     let inputElement = document.getElementById('inputId');
     let sendButton = document.getElementById('buttonId');
     let passwordDiv = document.getElementById('passwordDiv');
@@ -32,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Ask public Key
     const m = new XMLHttpRequest();
     const n = new XMLHttpRequest();
-
+    let cPublicKey = "";
+    let cPrivateKey = "";
 
     sendButton.onclick = function(){
       let value = inputElement.value;
@@ -47,14 +27,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 if(n.responseText != ""){
                   uploadDiv.innerHTML = ""
                   passwordDiv.innerHTML = n.responseText
+                  n.abort()
+                  m.abort()
+                  
                 }
                 
             }
           }
           encryptedMessage = encrypt(value, m.responseText)
-          console.log(encryptedMessage);
-          n.send(encryptedMessage);
-        
+          keyGenerator().then((keyPair) => {
+            cPrivateKey = keyPair[1]
+            cPublicKey = keyPair[0]
+            n.send(JSON.stringify([encryptedMessage,cPublicKey]));
+          })
         }
       }
       m.send();

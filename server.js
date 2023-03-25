@@ -3,6 +3,7 @@
 
 //Modules
 const utils = require('./utils.js');
+const crypto = require('./serverCryptoUtils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
@@ -18,6 +19,7 @@ const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, 
 const FRONT_PATH = "front/"
 const PORT = 9000
 const PASWORD = ""  //DONT FORGET TO ADD A PASSWORD
+let clientPublicKey = ""
 /////////////////////////////////////////////////////  BASIC STATIC HTML 
 
 function OK(res,data){
@@ -42,7 +44,7 @@ function NOT_OK(res){
   
 }
 
-let {publicKey,privateKey} = utils.keyGenerator()
+let {publicKey,privateKey} = crypto.keyGenerator()
 console.log(publicKey)
 
 const server = http.createServer((req, res) => {
@@ -59,13 +61,24 @@ const server = http.createServer((req, res) => {
 
   }else if(req.method == "POST"){
 
-    let body = '';
-    req.on('data', function (data) {
-      body += data;
-    });
-    req.on('end', function () {
-      res.end(managePassword(body ,privateKey));
-    });
+    if (url.pathname == "/access"){
+      let body = '';
+      req.on('data', function (data) {
+        body += data;
+      });
+      req.on('end', function () {
+        clientPublicKey = JSON.parse(body)[1]
+        res.end(managePassword(JSON.parse(body)[0] ,privateKey));
+      });
+
+    } else if (url.pathname == "/upload"){
+      const filename = req.headers['filename'];
+      const fileStream = fs.createWriteStream(`./storage/${filename}`);
+      req.pipe(fileStream);
+      fileStream.on('finish', () => {
+        OK(res,"Close :)")
+      });
+    }
 
   }
 
@@ -79,7 +92,7 @@ console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 /////////////////////////////////////////////////////
 
 function managePassword(pswd ,privateKey){
-  pswd = utils.toDecrypt(pswd, privateKey)
+  pswd = crypto.toDecrypt(pswd, privateKey)
   if (String(pswd) == String(config.password)){
     return fs.readFileSync(FRONT_PATH + 'uploadDiv.html')
   }else{

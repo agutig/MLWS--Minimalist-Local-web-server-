@@ -6,8 +6,7 @@ const utils = require('./utils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
-const { url } = require('inspector');
-const { text } = require('stream/consumers');
+
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -65,7 +64,6 @@ const server = http.createServer((req, res) => {
       body += data;
     });
     req.on('end', function () {
-      console.log("respuesta")
       res.end(managePassword(body ,privateKey));
     });
 
@@ -81,7 +79,7 @@ console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 /////////////////////////////////////////////////////
 
 function managePassword(pswd ,privateKey){
-  pswd = toDecrypt(pswd)
+  pswd = utils.toDecrypt(pswd, privateKey)
   if (String(pswd) == String(config.password)){
     return fs.readFileSync(FRONT_PATH + 'uploadDiv.html')
   }else{

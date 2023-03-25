@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const forge = require('node-forge');
 
 function print_req(req) {
 
@@ -24,35 +24,36 @@ function print_req(req) {
   }
 
 function keyGenerator(){
-  let { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 4096, // Tamaño de la clave en bits
-    publicKeyEncoding: {
-        type: 'pkcs1', // Formato de la clave pública
-        format: 'pem' // Formato de codificación
-    },
-    privateKeyEncoding: {
-        type: 'pkcs1', // Formato de la clave privada
-        format: 'pem' // Formato de codificación
-    }
-  });
+
+  const keyPair = forge.pki.rsa.generateKeyPair({ bits: 2048 });
+  const privateKey = forge.pki.privateKeyToPem(keyPair.privateKey);
+  const publicKey = forge.pki.publicKeyToPem(keyPair.publicKey);
   
   return {publicKey , privateKey };
   
 }
 
-function toDecrypt(encryptedMessage,privateKey){
+function toDecrypt(encryptedMessageBase64,privateKeyPem){
 
-  const decryptedMessage = crypto.privateDecrypt({
-      key: privateKey,
-      padding: crypto.constants.RSA_PKCS1_PADDING
-  }, encryptedMessage);
-  console.log(decryptedMessage.toString('utf8'));
+  const privateKey = forge.pki.privateKeyFromPem(privateKeyPem);
+  const encryptedMessage = forge.util.decode64(encryptedMessageBase64);
 
-  return decryptedMessage;
+  // Desencriptamos el mensaje utilizando la clave privada
+  const decryptedMessage = privateKey.decrypt(encryptedMessage, 'RSA-OAEP', {
+    md: forge.md.sha256.create(),
+    mgf1: {
+      md: forge.md.sha256.create(),
+    },
+  });
+
+  // Convertimos el mensaje desencriptado a texto
+  const decryptedMessageText = forge.util.decodeUtf8(decryptedMessage)
+
+  return decryptedMessageText
 }
   
 
 
 module.exports = {
-    print_req,keyGenerator
+    print_req,keyGenerator, toDecrypt
   }

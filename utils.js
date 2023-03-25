@@ -4,7 +4,7 @@ function print_req(req) {
 
     const myURL = new URL(req.url, 'http://' + req.headers['host']);
   
-    if (false){
+    if (true){
       console.log("");
       console.log("Mensaje de solicitud");
       console.log("====================");
@@ -38,6 +38,17 @@ function keyGenerator(){
   
   return {publicKey , privateKey };
   
+}
+
+function toDecrypt(encryptedMessage,privateKey){
+
+  const decryptedMessage = crypto.privateDecrypt({
+      key: privateKey,
+      padding: crypto.constants.RSA_PKCS1_PADDING
+  }, encryptedMessage);
+  console.log(decryptedMessage.toString('utf8'));
+
+  return decryptedMessage;
 }
   
 

@@ -6,10 +6,15 @@ const utils = require('./utils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
+const { url } = require('inspector');
+const { text } = require('stream/consumers');
+
+//LOAD CONFIG
+const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
 
 
 // LOAD LOCAL IP
-
 const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
 const FRONT_PATH = "front/"
 const PORT = 9000
@@ -43,19 +48,29 @@ console.log(publicKey)
 
 const server = http.createServer((req, res) => {
 
-  url = utils.print_req(req)
+  let url = utils.print_req(req)
 
   if (req.method == "GET" ){
 
     if (url.pathname == '/'){ fs.readFile(FRONT_PATH + 'index.html', (err, data) => { if(!err){ OK(res,data) }else{NOT_OK(res)}});
 
-    }else if (url.pathname == '/pk'){ 
-      
-      OK(res, String(publicKey))
+    }else if (url.pathname == '/pk'){ OK(res, String(publicKey))
 
     }else{fs.readFile(FRONT_PATH + url.pathname.slice(1,), (err, data) => { if(!err){OK(res,data)}else{NOT_OK(res)}}); }
 
+  }else if(req.method == "POST"){
+
+    let body = '';
+    req.on('data', function (data) {
+      body += data;
+    });
+    req.on('end', function () {
+      console.log("respuesta")
+      res.end(managePassword(body ,privateKey));
+    });
+
   }
+
 
 });
 
@@ -63,6 +78,15 @@ server.listen(PORT,IP);
 //console.log(server)
 console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
-/////////////////////////////////////////////////////  DINAMIC HTML 
+/////////////////////////////////////////////////////
+
+function managePassword(pswd ,privateKey){
+  pswd = toDecrypt(pswd)
+  if (String(pswd) == String(config.password)){
+    return fs.readFileSync(FRONT_PATH + 'uploadDiv.html')
+  }else{
+    return ""
+  }
+}
 
 

@@ -1,18 +1,35 @@
 
+<div>
+    <p>Selecciona un archivo:</p>
+    <input type="file" id="file-upload">
+    <button onclick="
+    //CODE TO UPLOAD
+    const fileInput = document.getElementById('file-upload');
+    const fileName = fileInput.files[0].name
+    console.log('uploading')
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
 
-<form method="POST" action="/upload">
-    <label for="file-upload">Selecciona un archivo:</label>
-    <input type="file" id="file-upload" name="archivo">
-    <input type="hidden" name="filename" value="">
-    <input type="submit" value="Enviar">
-</form>
+    const headers = new Headers();
+    headers.append('Content-Type', 'undefined');
 
-<script>
-    const form = document.querySelector('form');
-    const filenameInput = document.querySelector('#filename-input');
+    fetch('upload.html?name=' + String(fileName), {
+      method: 'POST',
+      body: formData,
+      headers: headers
+    })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error))
+    ///
+    ">
+    Click Me!</button>
+    <!--
+    <script>
+      function sendFile(){
+        
+        }
+    </script>
+    -->
+</div>
 
-    form.addEventListener('submit', (event) => {
-      const filename = encodeURIComponent(filenameInput.value);
-      form.action = `/upload?filename=${filename}`;
-    });
-</script>

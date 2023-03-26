@@ -45,7 +45,6 @@ function NOT_OK(res){
 }
 
 let {publicKey,privateKey} = crypto.keyGenerator()
-console.log(publicKey)
 
 const server = http.createServer((req, res) => {
 
@@ -76,10 +75,13 @@ const server = http.createServer((req, res) => {
       req.on('data', (chunk) => {
         data.push(chunk);
       }).on('end', () => {
-        console.log(req.headers['content-disposition'])
-        const fileData = Buffer.concat(data);
-        const fileName = 'storage/nombre_archivo.pdf';
-        fs.writeFile(fileName, fileData, (err) => {
+        console.log(url.searchParams.get("name"))
+        data = Buffer.concat(data);
+        data = (data.toString())
+        filePayload = data
+        console.log(filePayload)
+        const fileName = 'storage/'+ url.searchParams.get("name");
+        fs.writeFile(fileName, filePayload, (err) => {
           if (err) {
             console.error(err);
           } else {

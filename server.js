@@ -71,12 +71,22 @@ const server = http.createServer((req, res) => {
         res.end(managePassword(JSON.parse(body)[0] ,privateKey));
       });
 
-    } else if (url.pathname == "/upload"){
-      const filename = req.headers['filename'];
-      const fileStream = fs.createWriteStream(`./storage/${filename}`);
-      req.pipe(fileStream);
-      fileStream.on('finish', () => {
-        OK(res,"Close :)")
+    } else if (url.pathname == "/upload.html"){
+      let data = [];
+      req.on('data', (chunk) => {
+        data.push(chunk);
+      }).on('end', () => {
+        console.log(req.headers['content-disposition'])
+        const fileData = Buffer.concat(data);
+        const fileName = 'storage/nombre_archivo.pdf';
+        fs.writeFile(fileName, fileData, (err) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log("NEW FILE UPLOADED")
+            OK(res,"")
+          }
+        });
       });
     }
 

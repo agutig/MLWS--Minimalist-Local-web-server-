@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   passwordDiv.innerHTML = n.responseText
                   n.abort()
                   m.abort()
-                  
                 }
                 
             }

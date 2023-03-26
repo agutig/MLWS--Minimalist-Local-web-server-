@@ -1,6 +1,18 @@
 
-<form method="POST" action="/upload" enctype="multipart/form-data"> 
+
+<form method="POST" action="/upload">
     <label for="file-upload">Selecciona un archivo:</label>
-    <input type="file" id="file-upload" name="archivo" filename="nombre_archivo.pdf">
+    <input type="file" id="file-upload" name="archivo">
+    <input type="hidden" name="filename" value="">
     <input type="submit" value="Enviar">
 </form>
+
+<script>
+    const form = document.querySelector('form');
+    const filenameInput = document.querySelector('#filename-input');
+
+    form.addEventListener('submit', (event) => {
+      const filename = encodeURIComponent(filenameInput.value);
+      form.action = `/upload?filename=${filename}`;
+    });
+</script>

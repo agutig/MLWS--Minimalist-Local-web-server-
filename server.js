@@ -75,13 +75,11 @@ const server = http.createServer((req, res) => {
       req.on('data', (chunk) => {
         data.push(chunk);
       }).on('end', () => {
+        
         console.log(url.searchParams.get("name"))
         data = Buffer.concat(data);
-        data = (data.toString())
-        filePayload = data
-        console.log(filePayload)
         const fileName = 'storage/'+ url.searchParams.get("name");
-        fs.writeFile(fileName, filePayload, (err) => {
+        fs.writeFile(fileName, data , (err) => {
           if (err) {
             console.error(err);
           } else {

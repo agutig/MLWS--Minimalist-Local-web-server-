@@ -76,7 +76,7 @@ const server = http.createServer((req, res) => {
         data.push(chunk);
       }).on('end', () => {
         
-        console.log(url.searchParams.get("name"))
+      if (checkTipeFile(fileName)){
         data = Buffer.concat(data);
         const fileName = 'storage/'+ url.searchParams.get("name");
         fs.writeFile(fileName, data , (err) => {
@@ -87,7 +87,11 @@ const server = http.createServer((req, res) => {
             OK(res,"")
           }
         });
-      });
+      }else{
+        NOT_OK("No lol")
+      }
+
+    });
     }
 
   }
@@ -110,4 +114,11 @@ function managePassword(pswd ,privateKey){
   }
 }
 
+function checkTipeFile(name){
+  
+  permited = config.permited_files
+  name = name.split
+  console.log(permited.includes(name[name.lenght()]))
+  return permited.includes(name[name.lenght()])
 
+}

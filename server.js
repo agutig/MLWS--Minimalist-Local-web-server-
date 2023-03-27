@@ -123,10 +123,10 @@ function checkTipeFile(name){
 
 function manageStorage(file ,fileName){
   let dirSize,nFiles = getDirectorySize(STORAGE_PATH)
-  nFiles = nFiles +1
+  nFiles = nFiles
   dirSize = dirSize + (file.byteLength /1000000);
   
-  if(nFiles ==1 && dirSize > config.max_size){
+  if(nFiles ==0 && dirSize > config.max_size){
     return false
 
   }else if (nFiles > config.max_files || dirSize > config.max_size){

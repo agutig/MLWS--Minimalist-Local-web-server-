@@ -7,10 +7,13 @@ const crypto = require('./serverCryptoUtils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
+const { dir } = require('console');
 
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const STORAGE_PATH = config.storage_path
+
 
 
 
@@ -75,20 +78,14 @@ const server = http.createServer((req, res) => {
       req.on('data', (chunk) => {
         data.push(chunk);
       }).on('end', () => {
-        
+      
+      const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
       if (checkTipeFile(fileName)){
         data = Buffer.concat(data);
-        const fileName = 'storage/'+ url.searchParams.get("name");
-        fs.writeFile(fileName, data , (err) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log("NEW FILE UPLOADED")
-            OK(res,"")
-          }
-        });
+        storeResult = manageStorage(data ,fileName)
+        if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
-        NOT_OK("No lol")
+        NOT_OK(res)
       }
 
     });
@@ -108,7 +105,9 @@ console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 function managePassword(pswd ,privateKey){
   pswd = crypto.toDecrypt(pswd, privateKey)
   if (String(pswd) == String(config.password)){
-    return fs.readFileSync(FRONT_PATH + 'uploadDiv.html')
+    let html = (fs.readFileSync(FRONT_PATH + 'uploadDiv.html')).toString()
+    html = html.replace("*/replaceTypes" , config.permited_files.join(", "))
+    return html
   }else{
     return ""
   }
@@ -117,8 +116,83 @@ function managePassword(pswd ,privateKey){
 function checkTipeFile(name){
   
   permited = config.permited_files
-  name = name.split
-  console.log(permited.includes(name[name.lenght()]))
-  return permited.includes(name[name.lenght()])
+  name = name.split(".")
+  return permited.includes("." + String(name[name.length -1]))
 
+}
+
+function manageStorage(file ,fileName){
+  let dirSize,nFiles = getDirectorySize(STORAGE_PATH)
+  nFiles = nFiles +1
+  dirSize = dirSize + (file.byteLength /1000000);
+  
+  if(nFiles ==1 && dirSize > config.max_size){
+    return false
+
+  }else if (nFiles > config.max_files || dirSize > config.max_size){
+    oldest = getOldestFileInDirectory(STORAGE_PATH)
+    deleteFile(oldest).then((result) => {
+      manageStorage(file,fileName)
+    })
+    
+
+  }else{
+    fs.writeFile(fileName, file, (err) => {
+      if (err) {
+        console.error(err);
+        return false
+      } else {
+        console.log("NEW FILE UPLOADED")
+        return true
+      }
+    });
+  }
+}
+
+
+function getDirectorySize(dirPath) {
+  let size = 0;
+  let nFiles = 0;
+  const files = fs.readdirSync(dirPath);
+  files.forEach((file) => {
+    const filePath = STORAGE_PATH +"/"+ file;
+    const stat = fs.statSync(filePath);
+    size += stat.size;
+    nFiles +=1
+  });
+
+  return (size/1000000),nFiles;
+}
+
+function getOldestFileInDirectory(dirPath) {
+  let oldestFile = null;
+  let oldestFileCreationTime = null;
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((file) => {
+    const filePath = STORAGE_PATH +"/"+ file;
+    const stat = fs.statSync(filePath);
+
+    if (stat.isFile()) {
+      if (!oldestFile || stat.birthtime < oldestFileCreationTime) {
+        oldestFile = filePath;
+        oldestFileCreationTime = stat.birthtime;
+      }
+    }
+  });
+
+  return oldestFile;
+}
+
+function deleteFile(filePath){
+  return new Promise((resolve, reject) => {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log('OLD FILE DELETED');
+        resolve(true);
+      }
+    });
+  });
 }

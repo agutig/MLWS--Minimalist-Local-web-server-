@@ -1,4 +1,8 @@
 {
     "password": "1",
-    "permited_files": ["pdf","doc","docx","ppt","js","html","py", "mp4","png","jpeg","jpg","mp3","wav"]
+    "permited_files": [".pdf",".doc",".docx",".ppt",".js",".html",".py", ".mp4",".png",".jpeg",".jpg",".mp3",".wav",".pptx",".ppt"],
+    "max_size": 1000,
+    "max_files": 8,
+    "storage_path": "storage"
+
 }

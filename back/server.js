@@ -11,7 +11,7 @@ const storage = require('./storageUtils.js')
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-const FILES = JSON.parse(fs.readFileSync('front/files.json', 'utf8'));
+const FILES = JSON.parse(fs.readFileSync('../front/files.json', 'utf8'));
 const STORAGE_PATH = config.storage_path
 
 
@@ -20,7 +20,7 @@ const STORAGE_PATH = config.storage_path
 
 // LOAD LOCAL IP
 const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
-const FRONT_PATH = "front/"
+const FRONT_PATH = "../front/"
 const PORT = 9000
 const PASWORD = ""  //DONT FORGET TO ADD A PASSWORD
 let clientPublicKey = ""
@@ -121,9 +121,9 @@ const server = http.createServer((req, res) => {
       }).on('end', () => {
       
       const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
-      if (storage.checkTipeFile(fileName)){
+      if (storage.checkTipeFile(fileName,config.permited_files)){
         data = Buffer.concat(data);
-        storeResult = storage.manageStorage(data ,fileName)
+        storeResult = storage.manageStorage(data ,fileName, STORAGE_PATH, config.max_files,config.max_size)
         if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
         NOT_OK(res)

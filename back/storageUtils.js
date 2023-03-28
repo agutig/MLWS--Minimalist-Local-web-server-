@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function deleteFile(filePath){
     return new Promise((resolve, reject) => {
       fs.unlink(filePath, (err) => {
@@ -36,7 +38,7 @@ function getDirectorySize(dirPath) {
     let nFiles = 0;
     const files = fs.readdirSync(dirPath);
     files.forEach((file) => {
-      const filePath = STORAGE_PATH +"/"+ file;
+      const filePath = dirPath +"/"+ file;
       const stat = fs.statSync(filePath);
       size += stat.size;
       nFiles +=1
@@ -45,7 +47,7 @@ function getDirectorySize(dirPath) {
     return (size/1000000),nFiles;
   }
   
-  function manageStorage(file ,fileName){
+  function manageStorage(file ,fileName, STORAGE_PATH, max_files ,max_size){
     let dirSize,nFiles = getDirectorySize(STORAGE_PATH)
     nFiles = nFiles
     dirSize = dirSize + (file.byteLength /1000000);
@@ -53,7 +55,7 @@ function getDirectorySize(dirPath) {
     if(nFiles ==0 && dirSize > config.max_size){
       return false
   
-    }else if (nFiles > config.max_files || dirSize > config.max_size){
+    }else if (nFiles > max_files || dirSize > max_size){
       oldest = getOldestFileInDirectory(STORAGE_PATH)
       deleteFile(oldest).then((result) => {
         manageStorage(file,fileName)
@@ -74,9 +76,8 @@ function getDirectorySize(dirPath) {
   }
   
 
-function checkTipeFile(name){
+function checkTipeFile(name ,permited){
   
-    permited = config.permited_files
     name = name.split(".")
     return permited.includes("." + String(name[name.length -1]))
   

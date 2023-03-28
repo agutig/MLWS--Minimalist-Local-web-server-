@@ -19,6 +19,7 @@ const STORAGE_PATH = config.storage_path
 
 
 
+
 // LOAD LOCAL IP
 const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
 const FRONT_PATH = "front/"
@@ -69,6 +70,16 @@ const server = http.createServer((req, res) => {
       }else{NOT_OK(res)}
     })
 
+    }else if (url.pathname == '/upload.html'){ 
+      data = FILES.lock
+      data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
+      console.log(data)
+      if(!err){
+        console.log(data)
+        OK(res,data) 
+      }else{NOT_OK(res)}
+    })
+
     }else if (url.pathname == '/pk'){ OK(res, String(publicKey))
 
     }else{fs.readFile(FRONT_PATH + url.pathname.slice(1,), (err, data) => { if(!err){OK(res,data)}else{NOT_OK(res)}}); }
@@ -82,10 +93,30 @@ const server = http.createServer((req, res) => {
       });
       req.on('end', function () {
         clientPublicKey = JSON.parse(body)[1]
-        res.end(managePassword(JSON.parse(body)[0] ,privateKey));
+        access = managePassword(JSON.parse(body)[0] ,privateKey)
+        if(access){
+          let pswd_redir = "abcd"
+          let url_redir = "/upload"
+          let send = JSON.stringify([url_redir,pswd_redir])
+          OK(res,send) 
+        }
       });
 
-    } else if (url.pathname == "/upload.html"){
+    } else if (url.pathname == "/upload"){
+      console.log(req.headers.authorization)
+      if(req.headers.authorization == "abcd"){
+        data = FILES.upload
+        data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
+        console.log(data)
+        if(!err){
+          console.log(data)
+          OK(res,data) 
+        }else{NOT_OK(res)}
+      })
+      }
+
+      
+    } else if (url.pathname == "/upload/files"){
       let data = [];
       req.on('data', (chunk) => {
         data.push(chunk);
@@ -117,11 +148,9 @@ console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 function managePassword(pswd ,privateKey){
   pswd = crypto.toDecrypt(pswd, privateKey)
   if (String(pswd) == String(config.password)){
-    let html = (fs.readFileSync(FRONT_PATH + 'uploadDiv.html')).toString()
-    html = html.replace("*/replaceTypes" , config.permited_files.join(", "))
-    return html
+    return true
   }else{
-    return ""
+    return false
   }
 }
 
@@ -216,7 +245,7 @@ function manageEmpty(html = "", css = [""], js = [""], callback) {
   fs.readFile(FRONT_PATH + "/"+ html, 'utf8', (err, html) => {
     console.log(err)
     if (err) {
-      callback(err);
+      callback(true);
     } else {
       
       empty = empty.replace("<!--ReplaceHTML-->", html);

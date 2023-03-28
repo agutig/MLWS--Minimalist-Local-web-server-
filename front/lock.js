@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           n.onreadystatechange = () => {
             if (n.readyState==4 && m.status == 200) {
                 if(n.responseText != ""){
-                  uploadDiv.innerHTML = ""
-                  passwordDiv.innerHTML = n.responseText
+                  response = JSON.parse(n.responseText)
+                  next(response[0],response[1])
                   n.abort()
                   m.abort()
                 }

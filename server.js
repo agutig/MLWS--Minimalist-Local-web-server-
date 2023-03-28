@@ -7,9 +7,7 @@ const crypto = require('./serverCryptoUtils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
-const { dir } = require('console');
-const { FILE } = require('dns');
-
+const storage = require('./storageUtils.js')
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -123,9 +121,9 @@ const server = http.createServer((req, res) => {
       }).on('end', () => {
       
       const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
-      if (checkTipeFile(fileName)){
+      if (storage.checkTipeFile(fileName)){
         data = Buffer.concat(data);
-        storeResult = manageStorage(data ,fileName)
+        storeResult = storage.manageStorage(data ,fileName)
         if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
         NOT_OK(res)
@@ -154,89 +152,6 @@ function managePassword(pswd ,privateKey){
   }
 }
 
-function checkTipeFile(name){
-  
-  permited = config.permited_files
-  name = name.split(".")
-  return permited.includes("." + String(name[name.length -1]))
-
-}
-
-function manageStorage(file ,fileName){
-  let dirSize,nFiles = getDirectorySize(STORAGE_PATH)
-  nFiles = nFiles
-  dirSize = dirSize + (file.byteLength /1000000);
-  
-  if(nFiles ==0 && dirSize > config.max_size){
-    return false
-
-  }else if (nFiles > config.max_files || dirSize > config.max_size){
-    oldest = getOldestFileInDirectory(STORAGE_PATH)
-    deleteFile(oldest).then((result) => {
-      manageStorage(file,fileName)
-    })
-    
-
-  }else{
-    fs.writeFile(fileName, file, (err) => {
-      if (err) {
-        console.error(err);
-        return false
-      } else {
-        console.log("NEW FILE UPLOADED")
-        return true
-      }
-    });
-  }
-}
-
-
-function getDirectorySize(dirPath) {
-  let size = 0;
-  let nFiles = 0;
-  const files = fs.readdirSync(dirPath);
-  files.forEach((file) => {
-    const filePath = STORAGE_PATH +"/"+ file;
-    const stat = fs.statSync(filePath);
-    size += stat.size;
-    nFiles +=1
-  });
-
-  return (size/1000000),nFiles;
-}
-
-function getOldestFileInDirectory(dirPath) {
-  let oldestFile = null;
-  let oldestFileCreationTime = null;
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach((file) => {
-    const filePath = STORAGE_PATH +"/"+ file;
-    const stat = fs.statSync(filePath);
-
-    if (stat.isFile()) {
-      if (!oldestFile || stat.birthtime < oldestFileCreationTime) {
-        oldestFile = filePath;
-        oldestFileCreationTime = stat.birthtime;
-      }
-    }
-  });
-
-  return oldestFile;
-}
-
-function deleteFile(filePath){
-  return new Promise((resolve, reject) => {
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        console.log('OLD FILE DELETED');
-        resolve(true);
-      }
-    });
-  });
-}
 
 
 function manageEmpty(html = "", css = [""], js = [""], callback) {

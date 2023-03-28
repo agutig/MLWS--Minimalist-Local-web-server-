@@ -8,10 +8,12 @@ const fs = require('fs');
 const http = require('http');
 const os = require('os');
 const { dir } = require('console');
+const { FILE } = require('dns');
 
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const FILES = JSON.parse(fs.readFileSync('front/files.json', 'utf8'));
 const STORAGE_PATH = config.storage_path
 
 
@@ -55,7 +57,17 @@ const server = http.createServer((req, res) => {
 
   if (req.method == "GET" ){
 
-    if (url.pathname == '/'){ fs.readFile(FRONT_PATH + 'index.html', (err, data) => { if(!err){ OK(res,data) }else{NOT_OK(res)}});
+    if (url.pathname == '/'){
+
+      data = FILES.viewMenu
+      
+      data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
+      console.log(data)
+      if(!err){
+        console.log(data)
+        OK(res,data) 
+      }else{NOT_OK(res)}
+    })
 
     }else if (url.pathname == '/pk'){ OK(res, String(publicKey))
 
@@ -194,5 +206,23 @@ function deleteFile(filePath){
         resolve(true);
       }
     });
+  });
+}
+
+
+function manageEmpty(html = "", css = [""], js = [""], callback) {
+  let empty = fs.readFileSync(FRONT_PATH + '/empty.html', 'utf8');
+  console.log("jamones al vapor")
+  fs.readFile(FRONT_PATH + "/"+ html, 'utf8', (err, html) => {
+    console.log(err)
+    if (err) {
+      callback(err);
+    } else {
+      
+      empty = empty.replace("<!--ReplaceHTML-->", html);
+      empty = empty.replace("<!--ReplaceCSS-->", css.join("\n"));
+      empty = empty.replace("<!--ReplaceJS-->", js.join("\n"));
+      callback(false, empty);
+    }
   });
 }

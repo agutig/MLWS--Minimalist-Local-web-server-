@@ -1,0 +1,7 @@
+{
+    "viewMenu":{
+        "js":["<script type='text/javascript' src='/viewMenu.js'></script>"],
+        "cs":[""],
+        "html":["viewMenu.html"]
+    }
+}

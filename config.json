@@ -3,6 +3,7 @@
     "permited_files": [".pdf",".doc",".docx",".ppt",".js",".html",".py", ".mp4",".png",".jpeg",".jpg",".mp3",".wav",".pptx",".ppt"],
     "max_size": 1000000,
     "max_files": 100,
-    "storage_path": "storage"
+    "storage_path": "storage",
+    "lock_view" : true
 
 }

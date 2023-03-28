@@ -155,18 +155,45 @@ function managePassword(pswd ,privateKey){
 
 
 function manageEmpty(html = "", css = [""], js = [""], callback) {
-  let empty = fs.readFileSync(FRONT_PATH + '/empty.html', 'utf8');
-  console.log("jamones al vapor")
-  fs.readFile(FRONT_PATH + "/"+ html, 'utf8', (err, html) => {
-    console.log(err)
-    if (err) {
-      callback(true);
-    } else {
-      
-      empty = empty.replace("<!--ReplaceHTML-->", html);
+  Promise.all([
+    loadHTML(FRONT_PATH + '/components/empty.html'),
+    loadHTML(FRONT_PATH + '/components/' + html),
+  ])
+    .then(values => {
+      // Aquí se ejecuta cuando todas las promesas se han resuelto
+      empty = values[0]
+      empty = empty.replace("<!--ReplaceHTML-->", values[1]);
       empty = empty.replace("<!--ReplaceCSS-->", css.join("\n"));
       empty = empty.replace("<!--ReplaceJS-->", js.join("\n"));
       callback(false, empty);
-    }
+  
+      // Agrega aquí la lógica que deseas ejecutar cuando se han resuelto las promesas
+    })
+    .catch(error => {
+      // Aquí se ejecuta si una de las promesas falla
+      console.error(error);
+    });
+}
+
+
+
+function loadHTML(filePath ,dynamicFunc="" ,dynamicData=[]) {
+
+  //File path
+  //dinamicFunc --> A function that modifies de code, interesting for dinamic html
+  //dynamicData --> Data to reconstruct the dinamic func if necesary
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (dynamicFunc ==""){
+          resolve(data);
+        }else{
+          resolve(dynamicFunc[dynamicData])
+        }
+        
+      }
+    });
   });
 }

@@ -1,14 +1,14 @@
 {
     "viewMenu":{
-        "js":["<script type='text/javascript' src='/viewMenu.js'></script>"],
+        "js":["<script type='text/javascript' src='/js/viewMenu.js'></script>"],
         "cs":[""],
         "html":["viewMenu.html"]
     },
 
     "lock":{
-        "js":["<script type='text/javascript' src='/lock.js'></script>" ,
-         "<script type='text/javascript' src='/clientCryptoUtils.js'></script>",
-         "<script type='text/javascript' src='/forge.min.js'></script>" ],
+        "js":["<script type='text/javascript' src='/js/lock.js'></script>" ,
+         "<script type='text/javascript' src='/js/clientCryptoUtils.js'></script>",
+         "<script type='text/javascript' src='/js/forge.min.js'></script>" ],
         "cs":[""],
         "html":["lock.html"]
     },

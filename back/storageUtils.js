@@ -83,8 +83,27 @@ function checkTipeFile(name ,permited){
   
 }
 
+function storageInfo(dir) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, (error, files) => {
+      if (error) {
+        reject(error);
+      } else {
+        const result = files.map((file) => {
+          file = file.split(".")
+          return {
+            name: file[0],
+            type: file[1]
+          };
+        });
+        resolve(result);
+      }
+    });
+  });
+}
+
 module.exports = {
-    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile
+    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo
 }
       
   

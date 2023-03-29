@@ -2,7 +2,8 @@
     "viewMenu":{
         "js":["<script type='text/javascript' src='/js/viewMenu.js'></script>"],
         "cs":[""],
-        "html":["viewMenu.html"]
+        "html":["viewMenu.html"],
+        "components":["elementPreview.html"]
     },
 
     "lock":{

@@ -15,7 +15,7 @@
     },
 
     "upload":{
-        "js":["" ],
+        "js":["upload.js" ],
         "cs":[""],
         "html":["upload.html"]
     }

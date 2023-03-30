@@ -151,8 +151,10 @@ const server = http.createServer((req, res) => {
       const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
       if (storage.checkTipeFile(fileName,config.permited_files)){
         data = Buffer.concat(data);
-        storeResult = storage.manageStorage(data ,fileName, STORAGE_PATH, config.max_files,config.max_size)
-        if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
+        storage.numFiles(STORAGE_PATH)((num) => {
+          storeResult = storage.manageStorage(data ,String(num) + fileName, STORAGE_PATH, config.max_files,config.max_size)
+          if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
+        })
       }else{
         NOT_OK(res)}
     });

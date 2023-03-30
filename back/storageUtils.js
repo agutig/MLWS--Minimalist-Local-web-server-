@@ -102,6 +102,17 @@ function storageInfo(dir) {
   });
 }
 
+function numFiles(dir) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, (error, files) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(files.length);
+      }
+    });
+  });
+}
 
 
 function readFile(filePath) {
@@ -116,7 +127,7 @@ function readFile(filePath) {
   });
 }
 module.exports = {
-    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo, readFile
+    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo, readFile,numFiles
 }
       
   

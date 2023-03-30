@@ -2,12 +2,15 @@
 let access_pswd = ""
 
 function loadnewjs(urlFile){
+    // Crear una etiqueta de script dinámicamente
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = urlFile;
+    script.src = url;
+
+    // Añadir la etiqueta de script a la cabecera HTML
     const head = document.getElementsByTagName('head')[0];
     head.appendChild(script);
-}
+    }
 
 
 function next(url,pswd){

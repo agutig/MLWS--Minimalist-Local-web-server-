@@ -58,7 +58,7 @@ const server = http.createServer((req, res) => {
 
     if (url.pathname == '/'){
       data = FILES.lock
-      manageEmpty(data.html ,data.css,data.js,(err, data) => {
+      initEmpty(data.html ,data.css,data.js,(err, data) => {
       if(!err){
         data = data.replace("replaceURL","/viewMenu")
         OK(res,data) 
@@ -67,7 +67,7 @@ const server = http.createServer((req, res) => {
 
     }else if (url.pathname == '/upload'){ 
       data = FILES.lock
-      data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
+      data = initEmpty(data.html ,data.css,data.js,(err, data) => {
       if(!err){
         data = data.replace("replaceURL","/upload")
         OK(res,data) 
@@ -120,7 +120,7 @@ const server = http.createServer((req, res) => {
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
         console.log(data)
-        data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
+        data = initEmpty(data.html ,data.css,data.js,(err, data) => {
         if(!err){
           OK(res,data) 
         }else{NOT_OK(res)}
@@ -151,10 +151,8 @@ const server = http.createServer((req, res) => {
       const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
       if (storage.checkTipeFile(fileName,config.permited_files)){
         data = Buffer.concat(data);
-        storage.numFiles(STORAGE_PATH)((num) => {
-          storeResult = storage.manageStorage(data ,String(num) + fileName, STORAGE_PATH, config.max_files,config.max_size)
-          if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
-        })
+        storeResult = storage.manageStorage(data ,fileName, STORAGE_PATH, config.max_files,config.max_size)
+        if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
         NOT_OK(res)}
     });
@@ -190,17 +188,19 @@ function managePassword(pswd ,privateKey){
 
 
 
-function manageEmpty(html = "", css = [""], js = [""], callback) {
+function initEmpty(html = "", css = [""], js = [""], callback) {
   Promise.all([
-    loadHTML(FRONT_PATH + '/components/empty.html'),
-    loadHTML(FRONT_PATH + '/components/' + html),
+    fs.readFile(FRONT_PATH + '/components/empty.html'),
+    fs.readFile(FRONT_PATH + '/components/' + html),
+    prepareCss(css),
+    prepareJs(js)
   ])
     .then(values => {
       // Aquí se ejecuta cuando todas las promesas se han resuelto
       empty = values[0]
       empty = empty.replace("<!--ReplaceHTML-->", values[1]);
       empty = empty.replace("<!--ReplaceCSS-->", css.join("\n"));
-      empty = empty.replace("<!--ReplaceJS-->", js.join("\n"));
+      empty = empty.replace("<!--ReplaceJS-->", values[3]);
       callback(false, empty);
   
       // Agrega aquí la lógica que deseas ejecutar cuando se han resuelto las promesas
@@ -211,25 +211,22 @@ function manageEmpty(html = "", css = [""], js = [""], callback) {
     });
 }
 
+function prepareJs(jsArray){
+  updatedArray = []
+  jsArray.forEach((fileName) => {
+    updatedArray.push( "<script type='text/javascript' src='" + fileName +"'></script>")
+  })
 
-
-function loadHTML(filePath ,dynamicFunc="" ,dynamicData=[]) {
-
-  //File path
-  //dinamicFunc --> A function that modifies de code, interesting for dinamic html
-  //dynamicData --> Data to reconstruct the dinamic func if necesary
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        if (dynamicFunc ==""){
-          resolve(data);
-        }else{
-          resolve(dynamicFunc[dynamicData])
-        }
-        
-      }
-    });
-  });
+  return updatedArray.join("\n")
 }
+
+function prepareCss(CssArray){
+  updatedArray = []
+  CssArray.forEach((fileName) => {
+    updatedArray.push( "<link rel='stylesheet' href='styles.css'" + fileName + "'>")
+  })
+
+  return updatedArray.join("\n")
+}
+
+

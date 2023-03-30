@@ -7,15 +7,15 @@
     },
 
     "lock":{
-        "js":["<script type='text/javascript' src='/js/lock.js'></script>" ,
-         "<script type='text/javascript' src='/js/clientCryptoUtils.js'></script>",
-         "<script type='text/javascript' src='/js/forge.min.js'></script>" ],
+        "js":["js/lock.js" ,
+         "js/clientCryptoUtils.js",
+         "/js/forge.min.js" ],
         "cs":[""],
         "html":["lock.html"]
     },
 
     "upload":{
-        "js":["upload.js" ],
+        "js":["js/upload.js" ],
         "cs":[""],
         "html":["upload.html"]
     }

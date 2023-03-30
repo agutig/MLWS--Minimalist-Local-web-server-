@@ -1,4 +1,15 @@
 
+let access_pswd = ""
+
+function loadnewjs(urlFile){
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = urlFile;
+    const head = document.getElementsByTagName('head')[0];
+    head.appendChild(script);
+}
+
+
 function next(url,pswd){
     const headers = new Headers();
     headers.append('Authorization', pswd);
@@ -10,11 +21,14 @@ function next(url,pswd){
         })
         .then(response => response.text())
         .then(response => {
+            response = JSON.parse(response)
             console.log(response)
-            document.documentElement.innerHTML = response;
+            document.documentElement.innerHTML = response[0]
+            access_pswd = pswd
+            loadnewjs(response[2])
         })
         .catch(error => {
-            document.documentElement.innerHTML = response;
+            console.log("error")
         });
 
 }

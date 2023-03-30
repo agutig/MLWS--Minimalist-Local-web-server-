@@ -57,23 +57,19 @@ const server = http.createServer((req, res) => {
   if (req.method == "GET" ){
 
     if (url.pathname == '/'){
-
-      data = FILES.viewMenu
-      
-      data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
-      console.log(data)
+      data = FILES.lock
+      manageEmpty(data.html ,data.css,data.js,(err, data) => {
       if(!err){
-        console.log(data)
+        data = data.replace("replaceURL","/viewMenu")
         OK(res,data) 
       }else{NOT_OK(res)}
     })
 
-    }else if (url.pathname == '/upload.html'){ 
+    }else if (url.pathname == '/upload'){ 
       data = FILES.lock
       data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
-      console.log(data)
       if(!err){
-        console.log(data)
+        data = data.replace("replaceURL","/upload")
         OK(res,data) 
       }else{NOT_OK(res)}
     })
@@ -84,7 +80,7 @@ const server = http.createServer((req, res) => {
 
   }else if(req.method == "POST"){
 
-    if (url.pathname == "/access"){
+    if (url.pathname == "/access/upload"){
       let body = '';
       req.on('data', function (data) {
         body += data;
@@ -94,23 +90,55 @@ const server = http.createServer((req, res) => {
         access = managePassword(JSON.parse(body)[0] ,privateKey)
         if(access){
           let pswd_redir = "abcd"
-          let url_redir = "/upload"
+          let url_redir = "/upload/unlocked"
+          let send = JSON.stringify([url_redir,pswd_redir])
+          OK(res,send) 
+        }else{
+          console.log("Incorrect password")
+        }
+      });
+
+    }else if(url.pathname == "/access/viewMenu"){
+      let body = '';
+      req.on('data', function (data) {
+        body += data;
+      });
+      req.on('end', function () {
+        clientPublicKey = JSON.parse(body)[1]
+        access = managePassword(JSON.parse(body)[0] ,privateKey)
+        if(access){
+          let pswd_redir = "abcd"
+          let url_redir = "/viewMenu/unlocked"
           let send = JSON.stringify([url_redir,pswd_redir])
           OK(res,send) 
         }
       });
 
-    } else if (url.pathname == "/upload"){
-      console.log(req.headers.authorization)
+
+    } else if (url.pathname == "/upload/unlocked"){
+      console.log("unlocked")
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
-        data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
         console.log(data)
+        data = manageEmpty(data.html ,data.css,data.js,(err, data) => {
         if(!err){
-          console.log(data)
           OK(res,data) 
         }else{NOT_OK(res)}
       })
+    }
+
+    } else if (url.pathname == "/viewMenu/unlocked"){
+      console.log("unlocked")
+      if(req.headers.authorization == "abcd"){
+        data = FILES.viewMenu
+        loadHTML(FRONT_PATH + '/components/' + data.html)
+        .then((html) => {
+          data = [html,data.css,data.js]
+          console.log(data)
+          OK(res,JSON.stringify(data))
+        });
+         
+
       }
 
       
@@ -126,11 +154,17 @@ const server = http.createServer((req, res) => {
         storeResult = storage.manageStorage(data ,fileName, STORAGE_PATH, config.max_files,config.max_size)
         if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
-        NOT_OK(res)
-      }
-
+        NOT_OK(res)}
     });
-    }
+    }else if(url.pathname == "/viewMenu/viewJson"){
+      Promise.all([storage.readFile(FRONT_PATH +"components/elementPreview.html"),storage.storageInfo(STORAGE_PATH)])
+      .then(results => {
+        OK(res,JSON.stringify(results)) 
+      })
+      
+  }
+
+  
 
   }
 

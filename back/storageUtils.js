@@ -102,8 +102,21 @@ function storageInfo(dir) {
   });
 }
 
+
+
+function readFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }   
+    })
+  });
+}
 module.exports = {
-    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo
+    checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo, readFile
 }
       
   

@@ -1,6 +1,6 @@
 {
     "viewMenu":{
-        "js":["<script type='text/javascript' src='/js/viewMenu.js'></script>"],
+        "js":["js/viewMenu.js"],
         "cs":[""],
         "html":["viewMenu.html"],
         "components":["elementPreview.html"]

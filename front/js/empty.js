@@ -5,7 +5,7 @@ function loadnewjs(urlFile){
     // Crear una etiqueta de script dinámicamente
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = url;
+    script.src = urlFile;
 
     // Añadir la etiqueta de script a la cabecera HTML
     const head = document.getElementsByTagName('head')[0];

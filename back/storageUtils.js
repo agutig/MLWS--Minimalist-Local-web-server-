@@ -126,6 +126,8 @@ function readFile(filePath) {
     })
   });
 }
+
+
 module.exports = {
     checkTipeFile,manageStorage,getDirectorySize,getOldestFileInDirectory ,deleteFile,storageInfo, readFile,numFiles
 }

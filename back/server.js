@@ -7,7 +7,8 @@ const crypto = require('./serverCryptoUtils.js');
 const fs = require('fs');
 const http = require('http');
 const os = require('os');
-const storage = require('./storageUtils.js')
+const storage = require('./storageUtils.js');
+const { send } = require('process');
 
 //LOAD CONFIG
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -119,24 +120,26 @@ const server = http.createServer((req, res) => {
       console.log("unlocked")
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
-        console.log(data)
-        data = initEmpty(data.html ,data.css,data.js,(err, data) => {
-        if(!err){
-          OK(res,data) 
-        }else{NOT_OK(res)}
-      })
-    }
+        storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
+          let send = JSON.stringify([html,data.css, data.js])
+          console.log(send)  
+            OK(res,send) 
+          }).catch((err) => {
+            NOT_OK(res)
+          });
+      }
 
     } else if (url.pathname == "/viewMenu/unlocked"){
       console.log("unlocked")
       if(req.headers.authorization == "abcd"){
         data = FILES.viewMenu
-        loadHTML(FRONT_PATH + '/components/' + data.html)
-        .then((html) => {
-          data = [html,data.css,data.js]
-          console.log(data)
-          OK(res,JSON.stringify(data))
-        });
+        storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
+          let send = JSON.stringify([html,data.css, data.js])
+          console.log(send)  
+            OK(res,send) 
+          }).catch((err) => {
+            NOT_OK(res)
+          });
          
 
       }
@@ -190,8 +193,8 @@ function managePassword(pswd ,privateKey){
 
 function initEmpty(html = "", css = [""], js = [""], callback) {
   Promise.all([
-    fs.readFile(FRONT_PATH + '/components/empty.html'),
-    fs.readFile(FRONT_PATH + '/components/' + html),
+    storage.readFile(FRONT_PATH + '/components/empty.html'),
+    storage.readFile(FRONT_PATH + '/components/' + html),
     prepareCss(css),
     prepareJs(js)
   ])

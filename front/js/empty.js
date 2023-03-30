@@ -12,6 +12,17 @@ function loadnewjs(urlFile){
     head.appendChild(script);
     }
 
+function loadNewCss(url) {
+    // Crear una etiqueta de enlace dinámicamente
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = url;
+
+    // Añadir la etiqueta de enlace a la cabecera HTML
+    const head = document.getElementsByTagName('head')[0];
+    head.appendChild(link);
+    }
 
 function next(url,pswd){
     const headers = new Headers();
@@ -28,6 +39,7 @@ function next(url,pswd){
             console.log(response)
             document.documentElement.innerHTML = response[0]
             access_pswd = pswd
+            loadNewCss(response[1])
             loadnewjs(response[2])
         })
         .catch(error => {

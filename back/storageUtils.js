@@ -52,7 +52,7 @@ function getDirectorySize(dirPath) {
     nFiles = nFiles
     dirSize = dirSize + (file.byteLength /1000000);
     
-    if(nFiles ==0 && dirSize > config.max_size){
+    if(nFiles ==0 && dirSize > max_size){
       return false
   
     }else if (nFiles > max_files || dirSize > max_size){

@@ -1,7 +1,7 @@
 {
     "viewMenu":{
         "js":["js/viewMenu.js"],
-        "cs":[""],
+        "css":[""],
         "html":["viewMenu.html"],
         "components":["elementPreview.html"]
     },
@@ -9,14 +9,14 @@
     "lock":{
         "js":["js/lock.js" ,
          "js/clientCryptoUtils.js",
-         "/js/forge.min.js" ],
-        "cs":[""],
+         "js/forge.min.js" ],
+        "css":["css/lock.css"],
         "html":["lock.html"]
     },
 
     "upload":{
         "js":["js/upload.js" ],
-        "cs":[""],
+        "css":[""],
         "html":["upload.html"]
     }
 }

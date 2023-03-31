@@ -3,7 +3,7 @@ function print_req(req) {
 
     const myURL = new URL(req.url, 'http://' + req.headers['host']);
   
-    if (true){
+    if (false){
       console.log("");
       console.log("Mensaje de solicitud");
       console.log("====================");

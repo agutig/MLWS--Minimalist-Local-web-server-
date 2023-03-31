@@ -202,7 +202,7 @@ function initEmpty(html = "", css = [""], js = [""], callback) {
       // Aquí se ejecuta cuando todas las promesas se han resuelto
       empty = values[0]
       empty = empty.replace("<!--ReplaceHTML-->", values[1]);
-      empty = empty.replace("<!--ReplaceCSS-->", css.join("\n"));
+      empty = empty.replace("<!--ReplaceCSS-->", values[2]);
       empty = empty.replace("<!--ReplaceJS-->", values[3]);
       callback(false, empty);
   
@@ -224,9 +224,10 @@ function prepareJs(jsArray){
 }
 
 function prepareCss(CssArray){
+  console.log(CssArray)
   updatedArray = []
   CssArray.forEach((fileName) => {
-    updatedArray.push( "<link rel='stylesheet' href='styles.css'" + fileName + "'>")
+    updatedArray.push( "<link rel='stylesheet' href='" + fileName + "'>")
   })
 
   return updatedArray.join("\n")

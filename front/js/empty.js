@@ -1,7 +1,7 @@
 
 let access_pswd = ""
 
-function loadnewjs(urlFile){
+function loadNewjs(urlFile){
     // Crear una etiqueta de script dinámicamente
     const script = document.createElement('script');
     script.type = 'text/javascript';
@@ -40,7 +40,7 @@ function next(url,pswd){
             document.documentElement.innerHTML = response[0]
             access_pswd = pswd
             loadNewCss(response[1])
-            loadnewjs(response[2])
+            loadNewjs(response[2])
         })
         .catch(error => {
             console.log("error")

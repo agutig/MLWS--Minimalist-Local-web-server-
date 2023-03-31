@@ -1,7 +1,7 @@
 {
     "viewMenu":{
         "js":["js/viewMenu.js"],
-        "css":[""],
+        "css":["css/viewMenu.css"],
         "html":["viewMenu.html"],
         "components":["elementPreview.html"]
     },

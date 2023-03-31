@@ -1,8 +1,11 @@
 //CODE TO UPLOAD
 function uploadFile(){
-    const fileInput = document.getElementById('file-upload');
-    const file = fileInput.files[0]
-    const fileName = file.name
+    const fileInput = document.getElementById('fileUpload');
+    const files = fileInput.files
+
+    for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+    let fileName = file.name;
     console.log('uploading')
 
     const reader = new FileReader();
@@ -20,6 +23,7 @@ function uploadFile(){
         'Content-Type': 'application/octet-stream'
         }
     })
+    }
     }
 }
 ///

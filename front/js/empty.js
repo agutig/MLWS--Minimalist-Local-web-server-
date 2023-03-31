@@ -2,6 +2,7 @@
 let access_pswd = ""
 
 function loadNewjs(urlFile){
+  
     // Crear una etiqueta de script dinámicamente
     const script = document.createElement('script');
     script.type = 'text/javascript';
@@ -14,6 +15,7 @@ function loadNewjs(urlFile){
 
 function loadNewCss(url) {
     // Crear una etiqueta de enlace dinámicamente
+    console.log(url)
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -36,8 +38,8 @@ function next(url,pswd){
         .then(response => response.text())
         .then(response => {
             response = JSON.parse(response)
-            console.log(response)
-            document.documentElement.innerHTML = response[0]
+            //console.log(response)
+            document.body.innerHTML = response[0]
             access_pswd = pswd
             loadNewCss(response[1])
             loadNewjs(response[2])

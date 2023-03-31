@@ -1,8 +1,10 @@
 
-<div>
-    <p>Selecciona un archivo:</p>
-    <input type="file" id="file-upload"  accept="*/replaceTypes">
-    <button onclick="uploadFile()">
-    Click Me!</button>
+<div id="uploadDiv">
+    <p id="uploadTittle">Selecciona un archivo:</p>
+    <label class="custom-file-upload">
+        <input type="file" id="fileUpload"  accept="*/replaceTypes" multiple>
+        <p>Select a file to upload</p>
+    </label>
+    <button onclick="uploadFile()" id="lockButton">Upload!</button>
 </div>
 

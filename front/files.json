@@ -16,7 +16,7 @@
 
     "upload":{
         "js":["js/upload.js" ],
-        "css":[""],
+        "css":["css/upload.css"],
         "html":["upload.html"]
     }
 }

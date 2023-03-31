@@ -27,3 +27,18 @@ function uploadFile(){
     }
 }
 ///
+
+
+
+console.log("hey")
+const fileInput = document.getElementById('fileUpload');
+const fileText = document.getElementById('filesUploaded');
+fileInput.addEventListener('change', function() {
+    const fileList = fileInput.files;
+    const fileNames = [];
+    for (let i = 0; i < fileList.length; i++) {
+        fileNames.push("<p id='fileName'> - "+fileList[i].name+"<p>");
+    }
+    fileText.innerHTML = fileNames.join('\n')
+
+});

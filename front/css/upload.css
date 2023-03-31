@@ -5,7 +5,8 @@
     margin-top: 10vh;
     text-align: center;
     width: 80%;
-    height: 40vh;
+    min-height: 40vh;
+    height: auto;
     border-radius: 16px;
     background-color: #3b3b3b;
     box-shadow: 0 1px 1px rgba(0,0,0,0.25),
@@ -45,10 +46,11 @@
 #lockButton{
     margin: auto;
     margin-top: 0;
+    margin-bottom: 2vh;
     width: 45%;
-    height: 15%;
+    height: auto;
     border-radius: 16px;
-    font-size: 2vh;
+    font-size: 4vh;
     background-color: rgb(71, 71, 252);
     color: rgb(226, 226, 226);
     border: none;
@@ -57,4 +59,20 @@
               0 4px 4px rgba(0,0,0,0.15),
               0 8px 8px rgba(0,0,0,0.10),
               0 16px 16px rgba(0,0,0,0.05);
+}
+
+#filesUploaded{
+    color: rgb(232, 232, 232);
+    margin: auto;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    border: none;
+    width: 45%;
+    border-radius: 8px;
+    height: auto;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.25),
+              0 2px 2px rgba(0,0,0,0.20),
+              0 4px 4px rgba(0,0,0,0.15),
+              0 8px 8px rgba(0,0,0,0.10),
+              0 16px 16px rgba(0,0,0,0.05);  
 }

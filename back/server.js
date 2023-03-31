@@ -117,12 +117,10 @@ const server = http.createServer((req, res) => {
 
 
     } else if (url.pathname == "/upload/unlocked"){
-      console.log("unlocked")
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
         storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
           let send = JSON.stringify([html,data.css, data.js])
-          console.log(send)  
             OK(res,send) 
           }).catch((err) => {
             NOT_OK(res)
@@ -130,12 +128,10 @@ const server = http.createServer((req, res) => {
       }
 
     } else if (url.pathname == "/viewMenu/unlocked"){
-      console.log("unlocked")
       if(req.headers.authorization == "abcd"){
         data = FILES.viewMenu
         storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
           let send = JSON.stringify([html,data.css, data.js])
-          console.log(send)  
             OK(res,send) 
           }).catch((err) => {
             NOT_OK(res)
@@ -175,7 +171,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT,IP);
-//console.log(server)
+
 console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////
@@ -224,7 +220,6 @@ function prepareJs(jsArray){
 }
 
 function prepareCss(CssArray){
-  console.log(CssArray)
   updatedArray = []
   CssArray.forEach((fileName) => {
     updatedArray.push( "<link rel='stylesheet' href='" + fileName + "'>")

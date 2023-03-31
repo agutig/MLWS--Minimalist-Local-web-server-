@@ -15,7 +15,6 @@ function loadNewjs(urlFile){
 
 function loadNewCss(url) {
     // Crear una etiqueta de enlace dinámicamente
-    console.log(url)
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';

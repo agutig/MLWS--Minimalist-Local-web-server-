@@ -63,7 +63,7 @@ function getDirectorySize(dirPath) {
       
   
     }else{
-      fs.writeFile(fileName, file, (err) => {
+      fs.writeFile(STORAGE_PATH + "/" + fileName, file, (err) => {
         if (err) {
           console.error(err);
           return false

@@ -147,16 +147,17 @@ const server = http.createServer((req, res) => {
         data.push(chunk);
       }).on('end', () => {
       
-      const fileName = STORAGE_PATH +"/"+ url.searchParams.get("name");
+      const fileName = url.searchParams.get("name");
       if (storage.checkTipeFile(fileName,config.permited_files)){
         data = Buffer.concat(data);
-        storeResult = storage.manageStorage(data ,fileName, STORAGE_PATH, config.max_files,config.max_size)
+        console.log(FRONT_PATH + STORAGE_PATH)
+        storeResult = storage.manageStorage(data ,fileName, (FRONT_PATH + STORAGE_PATH), config.max_files,config.max_size)
         if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
         NOT_OK(res)}
     });
     }else if(url.pathname == "/viewMenu/viewJson"){
-      Promise.all([storage.readFile(FRONT_PATH +"components/elementPreview.html"),storage.storageInfo(STORAGE_PATH)])
+      Promise.all([storage.readFile(FRONT_PATH +"components/elementPreview.html"),storage.storageInfo(FRONT_PATH + "/" + STORAGE_PATH)])
       .then(results => {
         OK(res,JSON.stringify(results)) 
       })

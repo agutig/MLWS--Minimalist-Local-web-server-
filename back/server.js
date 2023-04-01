@@ -162,12 +162,23 @@ const server = http.createServer((req, res) => {
       })
     
     }else if(url.pathname == "/viewFile"){
-      storage.readFile(FRONT_PATH + "components/" + "viewFile").then((html) => {
+      data = FILES.viewFile
+      let param = url.searchParams.get("name").split(".")
+      param = param[param.length - 1]
+      let html = ""
+      switch(param){
+        case "pdf":
+          html = "<embed id='pdfViewer' src='/storage/" + url.searchParams.get("name") + "' type='application/pdf' />"
+          break
+
+        case "jpeg":
+        case "jpg":
+        case "png":
+          html = "<img id='imgViewer' src='/storage/" + url.searchParams.get("name") + "'></img>"
+          break
+      }
         let send = JSON.stringify([html,data.css, data.js])
           OK(res,send) 
-        }).catch((err) => {
-          NOT_OK(res)
-        });
     }
 
 

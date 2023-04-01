@@ -4,12 +4,17 @@
     margin: auto;
     margin-top: 2vh;
     margin-bottom: 2vh;
-    border: 2px solid rgb(27, 27, 27);
+    border: 2px solid rgb(56, 56, 56);
     border-radius: 8px;
     width: 18vw;
     min-height: 70%;
     height: auto;
     flex-basis: 20%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.25),
+              0 2px 2px rgba(0,0,0,0.20),
+              0 4px 4px rgba(0,0,0,0.15),
+              0 8px 8px rgba(0,0,0,0.10),
+              0 16px 16px rgba(0,0,0,0.05);
 }
 
 #elementImg{
@@ -37,6 +42,7 @@
     background-color: rgb(71, 71, 252);
     color: rgb(226, 226, 226);
     border: none;
+    transition: background-color 0.3s ease, color 0.3s ease , box-shadow 0.3s ease ;
     box-shadow: 0 1px 1px rgba(0,0,0,0.25),
               0 2px 2px rgba(0,0,0,0.20),
               0 4px 4px rgba(0,0,0,0.15),
@@ -53,4 +59,10 @@
               0 8px 8px rgba(0,0,0,0.3),
               0 16px 16px rgba(0,0,0,0.20),
               0 32px 32px rgba(0,0,0,0.1);
+}
+
+#elementButton:active{
+    background-color: rgb(71, 71, 252);
+    color: rgb(226, 226, 226);
+    box-shadow: none;
 }

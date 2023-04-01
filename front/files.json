@@ -6,6 +6,12 @@
         "components":["elementPreview.html"]
     },
 
+    "viewFile":{
+        "js":["" ],
+        "css":["css/viewFile.css"],
+        "html":["viewFile.html"]
+    },
+
     "lock":{
         "js":["js/lock.js" ,
          "js/clientCryptoUtils.js",

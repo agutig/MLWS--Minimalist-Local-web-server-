@@ -23,7 +23,7 @@ function loadView(component,data){
                 break;
         }
         newComponent = component.replace("replaceSource" ,urlImage)
-        newComponent = newComponent.replace("replaceTittle" ,data[i].name)
+        newComponent = newComponent.replace("replaceTittle" ,data[i].name + "." + data[i].type)
         document.body.innerHTML = document.body.innerHTML.replace("<!--replaceElementPreview-->" , newComponent + "\n" + "<!--replaceElementPreview-->")
     }
 }

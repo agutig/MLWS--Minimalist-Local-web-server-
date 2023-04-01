@@ -116,7 +116,7 @@ const server = http.createServer((req, res) => {
       });
 
 
-    } else if (url.pathname == "/upload/unlocked"){
+    }else if (url.pathname == "/upload/unlocked"){
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
         storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
@@ -127,7 +127,7 @@ const server = http.createServer((req, res) => {
           });
       }
 
-    } else if (url.pathname == "/viewMenu/unlocked"){
+    }else if (url.pathname == "/viewMenu/unlocked"){
       if(req.headers.authorization == "abcd"){
         data = FILES.viewMenu
         storage.readFile(FRONT_PATH + "components/" + data.html).then((html) => {
@@ -136,12 +136,10 @@ const server = http.createServer((req, res) => {
           }).catch((err) => {
             NOT_OK(res)
           });
-         
-
       }
 
       
-    } else if (url.pathname == "/upload/files"){
+    }else if (url.pathname == "/upload/files"){
       let data = [];
       req.on('data', (chunk) => {
         data.push(chunk);
@@ -156,15 +154,22 @@ const server = http.createServer((req, res) => {
       }else{
         NOT_OK(res)}
     });
+
     }else if(url.pathname == "/viewMenu/viewJson"){
       Promise.all([storage.readFile(FRONT_PATH +"components/elementPreview.html"),storage.storageInfo(FRONT_PATH + "/" + STORAGE_PATH)])
       .then(results => {
         OK(res,JSON.stringify(results)) 
       })
-      
-  }
+    
+    }else if(url.pathname == "/viewFile"){
+      storage.readFile(FRONT_PATH + "components/" + "viewFile").then((html) => {
+        let send = JSON.stringify([html,data.css, data.js])
+          OK(res,send) 
+        }).catch((err) => {
+          NOT_OK(res)
+        });
+    }
 
-  
 
   }
 

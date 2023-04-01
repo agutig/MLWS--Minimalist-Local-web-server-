@@ -20,8 +20,9 @@
 }
 
 #viewMenuBody{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, auto); 
+    gap: 1vw;
     background-color: rgb(71, 71, 71);
     border-radius: 8px;
     border: none;

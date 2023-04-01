@@ -1,8 +1,10 @@
 
 #elementDiv{
 
-    margin: 1vw;
+    margin: auto;
+    margin-top: 4vh;
     border: 2px solid black;
-    width: 20vw;
-    height: 20vh;
+    width: 18vw;
+    height: 40vh;
+    flex-basis: 20%;
 }

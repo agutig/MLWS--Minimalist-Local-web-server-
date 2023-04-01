@@ -17,6 +17,8 @@
     margin-top: 1vh;
     text-align: center;
     width: 60%;
+    height: 60%;
+    border-radius: 8px;
 }
 
 #elementTittle{

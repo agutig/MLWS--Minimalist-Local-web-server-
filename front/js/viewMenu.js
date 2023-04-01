@@ -19,10 +19,10 @@ function loadView(component,data){
             case "png":
             case "jpg":
             case "jpeg":
-                urlImage = "storage/" + data[i].name + data.type
+                urlImage = "storage/" + data[i].name + "." + data[i].type
                 break;
         }
-        newComponent = component.replace("replaceSource" ,"others/other.png")
+        newComponent = component.replace("replaceSource" ,urlImage)
         newComponent = newComponent.replace("replaceTittle" ,data[i].name)
         document.body.innerHTML = document.body.innerHTML.replace("<!--replaceElementPreview-->" , newComponent + "\n" + "<!--replaceElementPreview-->")
     }

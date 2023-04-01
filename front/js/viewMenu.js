@@ -9,7 +9,22 @@ function loadView(component,data){
     head.appendChild(link);
     
     for (let i = 0; i < data.length; i++) {
-        document.body.innerHTML = document.body.innerHTML.replace("<!--replaceElementPreview-->" , component + "\n" + "<!--replaceElementPreview-->")
+        console.log(data[i])
+        urlImage = "others/other.png"
+        switch(data[i].type){
+            case "pdf":
+                urlImage = "others/pdfIcon.png"
+                break;
+
+            case "png":
+            case "jpg":
+            case "jpeg":
+                urlImage = "storage/" + data[i].name + data.type
+                break;
+        }
+        newComponent = component.replace("replaceSource" ,"others/other.png")
+        newComponent = newComponent.replace("replaceTittle" ,data[i].name)
+        document.body.innerHTML = document.body.innerHTML.replace("<!--replaceElementPreview-->" , newComponent + "\n" + "<!--replaceElementPreview-->")
     }
 }
 

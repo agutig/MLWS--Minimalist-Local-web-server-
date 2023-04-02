@@ -29,7 +29,6 @@ function getOldestFileInDirectory(dirPath) {
         }
       }
     });
-  
     return oldestFile;
 }
 
@@ -43,7 +42,6 @@ function getDirectorySize(dirPath) {
       size += stat.size;
       nFiles +=1
     });
-  
     return (size/1000000),nFiles;
   }
   
@@ -77,7 +75,6 @@ function getDirectorySize(dirPath) {
   
 
 function checkTipeFile(name ,permited){
-  
     name = name.split(".")
     return permited.includes("." + String(name[name.length -1]))
   
@@ -101,6 +98,7 @@ function storageInfo(dir) {
     });
   });
 }
+
 
 function numFiles(dir) {
   return new Promise((resolve, reject) => {

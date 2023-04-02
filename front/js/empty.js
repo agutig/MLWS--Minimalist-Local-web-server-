@@ -37,7 +37,6 @@ function next(url,pswd){
         .then(response => response.text())
         .then(response => {
             response = JSON.parse(response)
-            //console.log(response)
             document.body.innerHTML = response[0]
             access_pswd = pswd
             loadNewCss(response[1])

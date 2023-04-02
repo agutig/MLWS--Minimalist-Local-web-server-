@@ -28,9 +28,6 @@ function uploadFile(){
 }
 ///
 
-
-
-console.log("hey")
 const fileInput = document.getElementById('fileUpload');
 const fileText = document.getElementById('filesUploaded');
 fileInput.addEventListener('change', function() {

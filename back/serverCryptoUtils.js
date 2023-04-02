@@ -5,7 +5,6 @@ function keyGenerator(){
     const keyPair = forge.pki.rsa.generateKeyPair({ bits: 2048 });
     const privateKey = forge.pki.privateKeyToPem(keyPair.privateKey);
     const publicKey = forge.pki.publicKeyToPem(keyPair.publicKey);
-    
     return {publicKey , privateKey };
     
   }
@@ -25,8 +24,7 @@ function toDecrypt(encryptedMessageBase64,privateKeyPem){
 }
 
 function encrypt(input, publicKeyPem) {
-    // ChatGPT AUTO --> PROBAR
-    // Parsear la clave pública
+    // ChatGPT AUTO --> NOT TESTED
     const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
     const message = forge.util.encodeUtf8(String(input));
     const encrypted = publicKey.encrypt(message, 'RSA-OAEP', {
@@ -35,12 +33,10 @@ function encrypt(input, publicKeyPem) {
         md: forge.md.sha256.create(),
       },
     });
-  
     const encryptedBase64 = forge.util.encode64(encrypted);
     return encryptedBase64;
   }
     
-  
   
 module.exports = {
     keyGenerator, toDecrypt

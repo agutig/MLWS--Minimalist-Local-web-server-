@@ -9,7 +9,6 @@ function loadView(component,data){
     head.appendChild(link);
     
     for (let i = 0; i < data.length; i++) {
-        console.log(data[i])
         urlImage = "others/other.png"
         switch(data[i].type){
             case "pdf":
@@ -40,8 +39,6 @@ fetch("/viewMenu/viewJson", {
     .then(response => response.text())
     .then(response => {
         response = JSON.parse(response)
-        console.log(response[0])
-        console.log(response[1])
         loadView(response[0] ,response[1])
     })
     .catch(error => {

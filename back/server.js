@@ -16,9 +16,6 @@ const FILES = JSON.parse(fs.readFileSync('../front/files.json', 'utf8'));
 const STORAGE_PATH = config.storage_path
 
 
-
-
-
 // LOAD LOCAL IP
 const IP =  "0.0.0.0"  // this specific direction only listen to ethernet dirs, not IP
 const FRONT_PATH = "../front/"
@@ -54,9 +51,7 @@ let {publicKey,privateKey} = crypto.keyGenerator()
 const server = http.createServer((req, res) => {
 
   let url = utils.print_req(req)
-
   if (req.method == "GET" ){
-
     if (url.pathname == '/'){
       data = FILES.lock
       initEmpty(data.html ,data.css,data.js,(err, data) => {
@@ -115,7 +110,6 @@ const server = http.createServer((req, res) => {
         }
       });
 
-
     }else if (url.pathname == "/upload/unlocked"){
       if(req.headers.authorization == "abcd"){
         data = FILES.upload
@@ -148,7 +142,6 @@ const server = http.createServer((req, res) => {
       const fileName = url.searchParams.get("name");
       if (storage.checkTipeFile(fileName,config.permited_files)){
         data = Buffer.concat(data);
-        console.log(FRONT_PATH + STORAGE_PATH)
         storeResult = storage.manageStorage(data ,fileName, (FRONT_PATH + STORAGE_PATH), config.max_files,config.max_size)
         if(storeResult){OK(res,"200 OK")}else{NOT_OK(res)}
       }else{
@@ -180,19 +173,13 @@ const server = http.createServer((req, res) => {
         let send = JSON.stringify([html,data.css, data.js])
           OK(res,send) 
     }
-
-
   }
-
-
 });
 
 server.listen(PORT,IP);
-
 console.log("SERVER CONECTED IN: http://" + String(IP) + "/" + String(PORT) )
 
 /////////////////////////////////////////////////////
-
 function managePassword(pswd ,privateKey){
   pswd = crypto.toDecrypt(pswd, privateKey)
   if (String(pswd) == String(config.password)){
@@ -202,8 +189,6 @@ function managePassword(pswd ,privateKey){
   }
 }
 
-
-
 function initEmpty(html = "", css = [""], js = [""], callback) {
   Promise.all([
     storage.readFile(FRONT_PATH + '/components/empty.html'),
@@ -212,17 +197,13 @@ function initEmpty(html = "", css = [""], js = [""], callback) {
     prepareJs(js)
   ])
     .then(values => {
-      // Aquí se ejecuta cuando todas las promesas se han resuelto
       empty = values[0]
       empty = empty.replace("<!--ReplaceHTML-->", values[1]);
       empty = empty.replace("<!--ReplaceCSS-->", values[2]);
       empty = empty.replace("<!--ReplaceJS-->", values[3]);
       callback(false, empty);
-  
-      // Agrega aquí la lógica que deseas ejecutar cuando se han resuelto las promesas
     })
     .catch(error => {
-      // Aquí se ejecuta si una de las promesas falla
       console.error(error);
     });
 }
@@ -232,7 +213,6 @@ function prepareJs(jsArray){
   jsArray.forEach((fileName) => {
     updatedArray.push( "<script type='text/javascript' src='" + fileName +"'></script>")
   })
-
   return updatedArray.join("\n")
 }
 
@@ -241,7 +221,6 @@ function prepareCss(CssArray){
   CssArray.forEach((fileName) => {
     updatedArray.push( "<link rel='stylesheet' href='" + fileName + "'>")
   })
-
   return updatedArray.join("\n")
 }
 
